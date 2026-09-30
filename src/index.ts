@@ -18,7 +18,7 @@ const MAX_TOOL_ROUNDS = 5;
 const memory: Anthropic.MessageParam[] = [
   {
     role: "user",
-    content: "What's the day is today?",
+    content: "What's the day is today in Bangkok? and in Sydney",
   },
 ];
 
@@ -63,17 +63,21 @@ async function main(): Promise<void> {
         const handler = toolsByName.get(block.name);
         try {
           if (!handler) throw new Error(`Unknown tool: ${block.name}`);
+          const output = handler.tool(block.input);
+          console.log(`Tool result: ${block.name}`, output);
           results.push({
             type: "tool_result",
             tool_use_id: block.id,
-            content: handler.tool(block.input),
+            content: output,
           });
         } catch (error) {
           // Send the error back so Claude can see it and retry.
+          const message = (error as Error).message;
+          console.log(`Tool error: ${block.name}`, message);
           results.push({
             type: "tool_result",
             tool_use_id: block.id,
-            content: (error as Error).message,
+            content: message,
             is_error: true,
           });
         }
