@@ -32,7 +32,7 @@ async function main(): Promise<void> {
 
   while (turn < MAX_TURNS && toolRounds < MAX_TOOL_ROUNDS) {
     const reply = await createMessage({
-      model: "claude-opus-5-5",
+      model: "claude-haiku-4-5",
       max_tokens: 16000,
       system,
       messages: memory.slice(-MEMORY_LIMIT),
